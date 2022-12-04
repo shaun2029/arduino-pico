@@ -371,6 +371,13 @@ public:
     void lowPowerMode();
     void noLowPowerMode();
 
+    /* 
+        Set the preffered BSSID MAC address. If an AP with this BSSID is not found,
+        param bssid is a pointer to an array of uint8_t containing the 6 bytes of the BSSID MAC address.
+        If a nullptr is passed, the bssid is cleared and not used for connections.
+    */
+    void setBSSID(const uint8_t *bssid);
+
     int ping(const char* hostname, uint8_t ttl = 128);
     int ping(const String &hostname, uint8_t ttl = 128);
     int ping(IPAddress host, uint8_t ttl = 128);
@@ -384,6 +391,8 @@ private:
     int _timeout = 10000;
     String _ssid;
     String _password;
+    uint8_t _bssid[6] = { 0 };
+
     bool _wifiHWInitted = false;
     bool _apMode = false;
 

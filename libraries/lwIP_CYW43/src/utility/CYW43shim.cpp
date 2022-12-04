@@ -67,7 +67,7 @@ bool CYW43::begin(const uint8_t* address, netif* netif) {
         // TODO: implement igmp_mac_filter and mld_mac_filter
         cyw43_set_allmulti(_self, true);
 
-        if (cyw43_arch_wifi_connect_timeout_ms(_ssid, _password, authmode, _timeout)) {
+        if (cyw43_arch_wifi_connect_timeout_ms(_ssid, _bssid, _password, authmode, _timeout)) {
             return false;
         } else {
             return true;

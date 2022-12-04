@@ -73,6 +73,7 @@ public:
     void setSSID(const char *p) {
         _ssid = p;
     }
+    
     void setPassword(const char *p) {
         _password = p;
     }
@@ -89,6 +90,10 @@ public:
         _timeout = timeout;
     }
 
+    void setBSSID(const uint8_t *p) {
+        _bssid = p;
+    }
+
     // LWIP netif for the IRQ packet processing
     static netif   *_netif;
 protected:
@@ -99,4 +104,5 @@ protected:
     int      _itf;
     const char *_ssid = nullptr;
     const char *_password = nullptr;
+    const uint8_t *_bssid = nullptr;
 };

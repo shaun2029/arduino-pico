@@ -90,6 +90,15 @@ int WiFiClass::begin(const char* ssid, const char *passphrase) {
     _ssid = ssid;
     _password = passphrase;
     _wifi.setSSID(_ssid.c_str());
+
+    /* If BSSID is valid then use it, else pass nullptr */
+    if (_bssid[0]) {
+      _wifi.setBSSID((const uint8_t *)_bssid);
+    }
+    else {
+      _wifi.setBSSID(nullptr);
+    }
+
     _wifi.setPassword(passphrase);
     _wifi.setTimeout(_timeout);
     _wifi.setSTA();
@@ -571,6 +580,16 @@ void WiFiClass::lowPowerMode() {
 
 void WiFiClass::noLowPowerMode() {
     cyw43_wifi_pm(&cyw43_state, CYW43_DEFAULT_PM);
+}
+
+/* Set the preferred BSSID */
+void WiFiClass::setBSSID(const uint8_t *bssid) {
+    if (bssid) {
+        memcpy(_bssid, bssid, 6);
+    }
+    else {
+        memset(_bssid, 0, 6);
+    }
 }
 
 int WiFiClass::ping(const char* hostname, uint8_t ttl) {
