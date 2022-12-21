@@ -108,6 +108,7 @@ int WiFiClass::begin(const char* ssid, const char *passphrase) {
     if (!_wifi.begin()) {
         return WL_IDLE_STATUS;
     }
+    noLowPowerMode();
     // Enable CYW43 event debugging (make sure Debug Port is set)
     //cyw43_state.trace_flags = 0xffff;
     while (!_calledESP && ((millis() - start < (uint32_t)2 * _timeout)) && !connected()) {
@@ -143,6 +144,7 @@ uint8_t WiFiClass::beginAP(const char *ssid, const char* passphrase) {
     if (!_wifi.begin()) {
         return WL_IDLE_STATUS;
     }
+    noLowPowerMode();
     IPAddress gw = _wifi.gatewayIP();
     if (!gw.isSet()) {
         gw = IPAddress(192, 168, 42, 1);
@@ -574,13 +576,14 @@ unsigned long WiFiClass::getTime() {
     return millis();
 }
 
-void WiFiClass::lowPowerMode() {
+void WiFiClass::aggressiveLowPowerMode() {
     cyw43_wifi_pm(&cyw43_state, CYW43_AGGRESSIVE_PM);
 }
 
-void WiFiClass::noLowPowerMode() {
+void WiFiClass::defaultLowPowerMode() {
     cyw43_wifi_pm(&cyw43_state, CYW43_DEFAULT_PM);
 }
+
 
 /* Set the preferred BSSID */
 void WiFiClass::setBSSID(const uint8_t *bssid) {
@@ -590,6 +593,11 @@ void WiFiClass::setBSSID(const uint8_t *bssid) {
     else {
         memset(_bssid, 0, 6);
     }
+}
+
+// The difference between the default CYW43_DEFAULT_PM (0xA11142) and not low power (0xA11140) is that it changed from "Powersave mode on specified interface with High throughput" to "No Powersave mode". All other parameters stayed the same.
+void WiFiClass::noLowPowerMode() {
+    cyw43_wifi_pm(&cyw43_state, 0xA11140);
 }
 
 int WiFiClass::ping(const char* hostname, uint8_t ttl) {

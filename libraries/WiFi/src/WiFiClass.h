@@ -368,7 +368,8 @@ public:
 
     unsigned long getTime();
 
-    void lowPowerMode();
+    void aggressiveLowPowerMode();
+    void defaultLowPowerMode();
     void noLowPowerMode();
 
     /* 
@@ -388,7 +389,7 @@ public:
     void feedWatchdog();
 
 private:
-    int _timeout = 10000;
+    int _timeout = 15000;
     String _ssid;
     String _password;
     uint8_t _bssid[6] = { 0 };
